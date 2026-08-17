@@ -46,9 +46,10 @@ builder.Services.AddProblemDetails();
     // SignalR powers the real-time commentary feed; the broadcaster adapts the
     // application layer's ICommentaryBroadcaster port onto a SignalR hub context.
     builder.Services.AddSignalR();
-    builder.Services.AddScoped<ICommentaryBroadcaster, SignalRCommentaryBroadcaster>();
+builder.Services.AddScoped<ICommentaryBroadcaster, SignalRCommentaryBroadcaster>();
+builder.Services.AddScoped<IScoreBroadcaster, SignalRScoreBroadcaster>();
 
-    const string ReactClientCorsPolicy = "ReactClient";
+const string ReactClientCorsPolicy = "ReactClient";
     var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
         ?? new[] { "http://localhost:5173" };
 

@@ -4,6 +4,7 @@ public class CricbuzzMatchListDto
 {
     public List<CricbuzzMatchItemDto> Matches { get; set; } = [];
     public long ResponseLastUpdated { get; set; }
+    public string? Source { get; set; }
 }
 
 public class CricbuzzMatchItemDto

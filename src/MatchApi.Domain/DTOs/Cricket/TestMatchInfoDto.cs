@@ -15,6 +15,7 @@ public class TestMatchInfoDto
     public string? Page { get; set; }
 
     public long ResponseLastUpdated { get; set; }
+    public string? Source { get; set; }
 }
 
 

@@ -14,6 +14,7 @@ public class CricbuzzScorecardResponseDto
     public long ResponseLastUpdated { get; set; }
 
     public bool IsMatchComplete { get; set; }
+    public string? Source { get; set; }
 }
 
 public class CricbuzzScorecardInningsDto
