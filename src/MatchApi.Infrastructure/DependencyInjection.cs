@@ -6,7 +6,7 @@ using MatchApi.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
+//using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 
 namespace MatchApi.Infrastructure;
@@ -21,11 +21,11 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString, sql =>
                 sql.MigrationsAssembly(typeof(DependencyInjection).Assembly.FullName)));
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration.GetConnectionString("Redis");
-            options.InstanceName = "MatchApi:";
-        });
+        //services.AddStackExchangeRedisCache(options =>
+        //{
+        //    options.Configuration = configuration.GetConnectionString("Redis");
+        //    options.InstanceName = "MatchApi:";
+        //});
 
         services.AddScoped<ITeamRepository, TeamRepository>();
         services.AddScoped<IFixtureRepository, FixtureRepository>();
