@@ -1,5 +1,6 @@
 using MatchApi.Application.Common.Interfaces;
 using MatchApi.Application.Features.Fixtures.Common;
+using MatchApi.Domain.Entities;
 using MediatR;
 
 namespace MatchApi.Application.Features.Fixtures.Queries.GetLiveFixtures;
@@ -30,8 +31,11 @@ public class GetLiveFixturesQueryHandler : IRequestHandler<GetLiveFixturesQuery,
                 f.Phase?.ToString(),
                 f.HomeScore.Runs,
                 f.HomeScore.Wickets,
+                f.HomeScore.Overs,
                 f.AwayScore.Runs,
                 f.AwayScore.Wickets,
+                f.AwayScore.Overs,
+                f.TotalOvers,
                 f.SportId))
             .ToList();
     }

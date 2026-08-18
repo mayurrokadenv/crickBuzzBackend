@@ -23,9 +23,11 @@ public class Fixture : BaseEntity
     public Score HomeScore { get; set; } = null!;
     public Score AwayScore { get; set; } = null!;
 
+    public string TotalOvers { get; set; } = null!;
+
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();
 
-    public static Fixture Create(Team homeTeam, Team awayTeam, DateTime scheduledAtUtc)
+    public static Fixture Create(Team homeTeam, Team awayTeam, DateTime scheduledAtUtc, string totalOvers)
     {
         if (homeTeam.Id == awayTeam.Id)
             throw new InvalidOperationException("A team cannot play against itself.");
@@ -43,7 +45,8 @@ public class Fixture : BaseEntity
             ScheduledAtUtc = scheduledAtUtc,
             Status = MatchStatus.Scheduled,
             HomeScore = Score.Zero(tracksWickets),
-            AwayScore = Score.Zero(tracksWickets)
+            AwayScore = Score.Zero(tracksWickets),
+            TotalOvers = totalOvers,
         };
     }
 
@@ -88,14 +91,14 @@ public class Fixture : BaseEntity
 
     // Adds to a team's existing score/wickets (e.g. from an admin edit form) without touching
     // the commentary feed at all - unlike AdjustScore, which always logs a CommentaryEntry.
-    public void UpdateScore(FixtureSide side, int runsDelta, int? wicketsDelta)
+    public void UpdateScore(FixtureSide side, int runsDelta, int? wicketsDelta ,string? overs)
     {
         if (wicketsDelta is not null && wicketsDelta != 0 && Sport.Name != Enums.Sport.Cricket.ToString())
         {
             throw new InvalidOperationException("Wickets can only be updated for cricket fixtures.");
         }
 
-        ScoreFor(side).Apply(runsDelta, wicketsDelta ?? 0);
+        ScoreFor(side).Apply(runsDelta, wicketsDelta ?? 0,overs);
     }
 
     public void UpdateStatus(MatchStatus newStatus)

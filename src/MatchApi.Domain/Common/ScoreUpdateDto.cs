@@ -8,6 +8,8 @@ namespace MatchApi.Domain.Common
     Guid FixtureId,
     int HomeRuns,
     int HomeWickets,
+    string? HomeOvers,
     int AwayRuns,
-    int AwayWickets);
+    int AwayWickets,
+    string? AwayOvers);
 }
