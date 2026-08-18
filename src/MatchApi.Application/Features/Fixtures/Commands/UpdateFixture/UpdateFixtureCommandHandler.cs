@@ -35,19 +35,22 @@ public class UpdateFixtureCommandHandler : IRequestHandler<UpdateFixtureCommand,
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new FixtureDto(
-            fixture.Id,
-            fixture.HomeTeamId,
-            fixture.HomeTeam?.Name ?? string.Empty,
-            fixture.AwayTeamId,
-            fixture.AwayTeam?.Name ?? string.Empty,
-            fixture.Sport?.Name ?? string.Empty,
-            fixture.ScheduledAtUtc,
-            fixture.Status.ToString(),
-            fixture.Phase?.ToString(),
-            fixture.HomeScore.Runs,
-            fixture.HomeScore.Wickets,
-            fixture.AwayScore.Runs,
-            fixture.AwayScore.Wickets,
-            fixture.SportId);
+      fixture.Id,
+      fixture.HomeTeamId,
+      fixture.HomeTeam?.Name ?? string.Empty,
+      fixture.AwayTeamId,
+      fixture.AwayTeam?.Name ?? string.Empty,
+      fixture.Sport?.Name ?? string.Empty,
+      fixture.ScheduledAtUtc,
+      fixture.Status.ToString(),
+      fixture.Phase?.ToString(),
+      fixture.HomeScore.Runs,
+      fixture.HomeScore.Wickets,
+      fixture.HomeScore.Overs,
+      fixture.AwayScore.Runs,
+      fixture.AwayScore.Wickets,
+      fixture.AwayScore.Overs,
+      fixture.TotalOvers,
+      fixture.SportId);
     }
 }

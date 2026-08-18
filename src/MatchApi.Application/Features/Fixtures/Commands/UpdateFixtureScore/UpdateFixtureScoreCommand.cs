@@ -8,4 +8,5 @@ public record UpdateFixtureScoreCommand(
     Guid FixtureId,
     FixtureSide Side,
     int RunsDelta,
+    string Overs,
     int? WicketsDelta) : IRequest<FixtureDto>;
