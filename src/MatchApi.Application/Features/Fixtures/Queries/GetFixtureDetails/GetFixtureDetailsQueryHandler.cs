@@ -80,8 +80,11 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
             fixture.Phase?.ToString(),
             fixture.HomeScore.Runs,
             fixture.HomeScore.Wickets,
+            fixture.HomeScore.Overs,
             fixture.AwayScore.Runs,
             fixture.AwayScore.Wickets,
+            fixture.AwayScore.Overs,
+            fixture.TotalOvers,
             commentary,
             topPerformers);
     }
