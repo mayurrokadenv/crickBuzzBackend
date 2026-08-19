@@ -14,7 +14,10 @@ public record FixtureDetailsDto(
     string? Phase,
     int HomeScore,
     int? HomeWickets,
+    string? HomeOvers,
     int AwayScore,
     int? AwayWickets,
+    string? AwayOvers,
+    string TotalOvers,
     IReadOnlyList<CommentaryDto> Commentary,
     IReadOnlyList<TopPerformerDto> TopPerformers);
