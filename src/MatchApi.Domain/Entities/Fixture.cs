@@ -50,16 +50,26 @@ public class Fixture : BaseEntity
         };
     }
 
-    public CommentaryEntry AddCommentary(FixtureSide side, Guid playerId, CommentaryAction action, string? note)
+    public CommentaryEntry AddCommentary(
+      FixtureSide side,
+      Guid playerId,
+      CommentaryAction action,
+      string? note)
     {
-        if (Sport.Name != Enums.Sport.Cricket.ToString() && Sport.Name != Enums.Sport.Football.ToString())
+        if (Sport.Name != Enums.Sport.Cricket.ToString() &&
+            Sport.Name != Enums.Sport.Football.ToString())
         {
-            throw new InvalidOperationException("Ball-by-ball commentary is only supported for cricket fixtures.");
+            throw new InvalidOperationException(
+                "Ball-by-ball commentary is only supported for cricket fixtures.");
         }
 
-        ScoreFor(side).Apply(action.ToRuns(), action.ToWicketDelta());
+        var entry = CommentaryEntry.Create(
+            Id,
+            side,
+            playerId,
+            action,
+            note);
 
-        var entry = CommentaryEntry.Create(Id, side, playerId, action, note);
         CommentaryEntries.Add(entry);
         return entry;
     }
