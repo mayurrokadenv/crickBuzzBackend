@@ -8,6 +8,7 @@ public record CommentaryDto(
     string PlayerName,
     string Action,
     string? Note,
+    string? Ball,
     DateTime CreatedAtUtc,
     int HomeScore,
     int? HomeWickets,

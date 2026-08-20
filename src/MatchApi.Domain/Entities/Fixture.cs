@@ -54,7 +54,7 @@ public class Fixture : BaseEntity
       FixtureSide side,
       Guid playerId,
       CommentaryAction action,
-      string? note)
+      string? note, string? ball)
     {
         if (Sport.Name != Enums.Sport.Cricket.ToString() &&
             Sport.Name != Enums.Sport.Football.ToString())
@@ -68,7 +68,7 @@ public class Fixture : BaseEntity
             side,
             playerId,
             action,
-            note);
+            note,ball);
 
         CommentaryEntries.Add(entry);
         return entry;
@@ -94,7 +94,7 @@ public class Fixture : BaseEntity
                 _ => CommentaryAction.Single
             };
 
-        var entry = CommentaryEntry.Create(Id, side, playerId: null, action, note ?? "Score updated manually");
+        var entry = CommentaryEntry.Create(Id, side, playerId: null, action, note ?? "Score updated manually",ball:null);
         CommentaryEntries.Add(entry);
         return entry;
     }

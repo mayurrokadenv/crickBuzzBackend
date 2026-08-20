@@ -48,7 +48,7 @@ public class CreateCommentaryCommandHandler : IRequestHandler<CreateCommentaryCo
         var team = player.Team?.Name;
         var sport=player.Team?.Sport?.Name;
         var fixtureName= fixture.HomeTeam?.Name +" v "+ fixture.AwayTeam?.Name;
-        var entry = fixture.AddCommentary(request.Side, request.PlayerId, request.Action, request.Note);
+        var entry = fixture.AddCommentary(request.Side, request.PlayerId, request.Action, request.Note,request.CurrentBall);
 
         // Explicitly registered as Added: the entry's Id is already a real (non-default) Guid by the
         // time it's attached via the Fixture's navigation collection, so EF's automatic graph-discovery
@@ -67,6 +67,7 @@ public class CreateCommentaryCommandHandler : IRequestHandler<CreateCommentaryCo
             player.Name,
             entry.Action.ToString(),
             entry.Note,
+            entry.Ball,
             entry.CreatedAtUtc,
             fixture.HomeScore.Runs,
             fixture.HomeScore.Wickets,

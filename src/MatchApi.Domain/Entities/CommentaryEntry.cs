@@ -18,6 +18,7 @@ public class CommentaryEntry : BaseEntity
     public CommentaryAction Action { get; set; }
 
     public string? Note { get; set; }
+    public string? Ball { get; set; }
 
     public void UpdateNote(string? note)
     {
@@ -29,7 +30,7 @@ public class CommentaryEntry : BaseEntity
         FixtureSide side,
         Guid? playerId,
         CommentaryAction action,
-        string? note)
+        string? note, string? ball)
     {
         if (fixtureId == Guid.Empty)
             throw new InvalidOperationException("Fixture is required.");
@@ -40,7 +41,8 @@ public class CommentaryEntry : BaseEntity
             Side = side,
             PlayerId = playerId,
             Action = action,
-            Note = note
+            Note = note,
+            Ball= ball
         };
     }
 }

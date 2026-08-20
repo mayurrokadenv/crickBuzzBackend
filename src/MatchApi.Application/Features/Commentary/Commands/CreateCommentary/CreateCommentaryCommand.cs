@@ -9,4 +9,5 @@ public record CreateCommentaryCommand(
     FixtureSide Side,
     Guid PlayerId,
     CommentaryAction Action,
+    string? CurrentBall,
     string? Note) : IRequest<CommentaryDto>;
