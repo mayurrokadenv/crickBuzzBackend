@@ -23,7 +23,7 @@ public class Fixture : BaseEntity
     public Score HomeScore { get; set; } = null!;
     public Score AwayScore { get; set; } = null!;
 
-    public string TotalOvers { get; set; } = null!;
+    public string? TotalOvers { get; set; }
 
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();
 
