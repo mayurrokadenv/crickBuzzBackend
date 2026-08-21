@@ -103,6 +103,7 @@ public static class CommentaryEndpoints
                 request.Side,
                 request.PlayerId,
                 request.Action,
+                 request.CurrentBall,
                 request.Note);
 
             var response = await sender.Send(command, cancellationToken);
@@ -123,6 +124,6 @@ public static class CommentaryEndpoints
     }
 }
 
-public record CreateCommentaryRequest(FixtureSide Side, Guid PlayerId, CommentaryAction Action, string? Note);
+public record CreateCommentaryRequest(FixtureSide Side, Guid PlayerId, CommentaryAction Action,string? CurrentBall, string? Note);
 
 public record UpdateCommentaryRequest(string? Note);

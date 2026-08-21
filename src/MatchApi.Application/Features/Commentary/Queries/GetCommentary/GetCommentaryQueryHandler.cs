@@ -35,6 +35,7 @@ public class GetCommentaryQueryHandler : IRequestHandler<GetCommentaryQuery, IRe
                 e.Player?.Name ?? string.Empty,
                 e.Action.ToString(),
                 e.Note,
+                e.Ball,
                 e.CreatedAtUtc,
                 fixture.HomeScore.Runs,
                 fixture.HomeScore.Wickets,

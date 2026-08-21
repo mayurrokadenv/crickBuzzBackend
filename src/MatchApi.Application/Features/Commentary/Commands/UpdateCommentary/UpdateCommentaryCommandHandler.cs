@@ -52,6 +52,7 @@ public class UpdateCommentaryCommandHandler : IRequestHandler<UpdateCommentaryCo
             entry.Player?.Name ?? string.Empty,
             entry.Action.ToString(),
             entry.Note,
+            entry.Ball,
             entry.CreatedAtUtc,
             fixture.HomeScore.Runs,
             fixture.HomeScore.Wickets,
