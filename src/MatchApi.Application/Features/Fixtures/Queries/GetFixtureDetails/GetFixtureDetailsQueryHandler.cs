@@ -12,11 +12,13 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
 
     private readonly IFixtureRepository _fixtureRepository;
     private readonly ICommentaryRepository _commentaryRepository;
+    private readonly IScorecardRepository _scorecardRepository;
 
-    public GetFixtureDetailsQueryHandler(IFixtureRepository fixtureRepository, ICommentaryRepository commentaryRepository)
+    public GetFixtureDetailsQueryHandler(IFixtureRepository fixtureRepository, ICommentaryRepository commentaryRepository,IScorecardRepository scorecardRepository)
     {
         _fixtureRepository = fixtureRepository;
         _commentaryRepository = commentaryRepository;
+        _scorecardRepository = scorecardRepository;
     }
 
     public async Task<FixtureDetailsDto> Handle(GetFixtureDetailsQuery request, CancellationToken cancellationToken)
@@ -69,6 +71,47 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
             .Take(TopPerformerCount)
             .ToList();
 
+
+        var scorecards = await _scorecardRepository.GetByFixtureAsync(
+    fixture.Id,
+    cancellationToken);
+
+        var scorecardDtos = scorecards
+    .Select(s => new FixtureScorecardDto(
+        s.Id,
+        s.FixtureId,
+        s.InningsNo,
+        s.BattingTeamId,
+        s.BowlingTeamId,
+
+        s.BattingFigures
+            .Select(b => new BattingFigureDto(
+                b.Id,
+                b.PlayerId,
+                b.Player.Name,
+                b.Runs,
+                b.Balls,
+                b.Fours,
+                b.Sixes,
+                b.StrikeRate))
+            .ToList(),
+
+        s.BowlingFigures
+            .Select(b => new BowlingFigureDto(
+                b.Id,
+                b.PlayerId,
+                b.Player.Name,
+                b.Overs,
+                b.Maidens,
+                b.Runs,
+                b.Wickets,
+                b.NoBalls,
+                b.Wides,
+                b.Economy))
+            .ToList()
+    ))
+    .ToList();
+
         return new FixtureDetailsDto(
             fixture.Id,
             fixture.HomeTeamId,
@@ -87,6 +130,7 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
             fixture.AwayScore.Overs,
             fixture.TotalOvers,
             commentary,
-            topPerformers);
+            topPerformers,
+            scorecardDtos);
     }
 }

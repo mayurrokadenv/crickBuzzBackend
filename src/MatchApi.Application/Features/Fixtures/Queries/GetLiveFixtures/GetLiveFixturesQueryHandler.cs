@@ -1,22 +1,27 @@
 using MatchApi.Application.Common.Interfaces;
 using MatchApi.Application.Features.Fixtures.Common;
-using MatchApi.Domain.Entities;
 using MediatR;
 
 namespace MatchApi.Application.Features.Fixtures.Queries.GetLiveFixtures;
 
-public class GetLiveFixturesQueryHandler : IRequestHandler<GetLiveFixturesQuery, IReadOnlyList<FixtureDto>>
+public class GetLiveFixturesQueryHandler
+    : IRequestHandler<GetLiveFixturesQuery, IReadOnlyList<FixtureDto>>
 {
     private readonly IFixtureRepository _fixtureRepository;
 
-    public GetLiveFixturesQueryHandler(IFixtureRepository fixtureRepository)
+    public GetLiveFixturesQueryHandler(
+        IFixtureRepository fixtureRepository)
     {
         _fixtureRepository = fixtureRepository;
     }
 
-    public async Task<IReadOnlyList<FixtureDto>> Handle(GetLiveFixturesQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<FixtureDto>> Handle(
+        GetLiveFixturesQuery request,
+        CancellationToken cancellationToken)
     {
-        var fixtures = await _fixtureRepository.GetLiveAsync(cancellationToken);
+        var fixtures =
+            await _fixtureRepository.GetLiveAsync(
+                cancellationToken);
 
         return fixtures
             .Select(f => new FixtureDto(
@@ -29,14 +34,54 @@ public class GetLiveFixturesQueryHandler : IRequestHandler<GetLiveFixturesQuery,
                 f.ScheduledAtUtc,
                 f.Status.ToString(),
                 f.Phase?.ToString(),
+
                 f.HomeScore.Runs,
                 f.HomeScore.Wickets,
                 f.HomeScore.Overs,
+
                 f.AwayScore.Runs,
                 f.AwayScore.Wickets,
                 f.AwayScore.Overs,
+
                 f.TotalOvers,
-                f.SportId))
+                f.SportId,
+
+                f.Scorecards
+                    .Select(s => new FixtureScorecardDto(
+                        s.Id,
+                        s.FixtureId,
+                        s.InningsNo,
+                        s.BattingTeamId,
+                        s.BowlingTeamId,
+
+                        s.BattingFigures
+                            .Select(b => new BattingFigureDto(
+                                b.Id,
+                                b.PlayerId,
+                                b.Player.Name,
+                                b.Runs,
+                                b.Balls,
+                                b.Fours,
+                                b.Sixes,
+                                b.StrikeRate))
+                            .ToList(),
+
+                        s.BowlingFigures
+                            .Select(b => new BowlingFigureDto(
+                                b.Id,
+                                b.PlayerId,
+                                b.Player.Name,
+                                b.Overs,
+                                b.Maidens,
+                                b.Runs,
+                                b.Wickets,
+                                b.NoBalls,
+                                b.Wides,
+                                b.Economy))
+                            .ToList()
+                    ))
+                    .ToList()
+            ))
             .ToList();
     }
 }
