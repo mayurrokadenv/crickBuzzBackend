@@ -28,18 +28,28 @@ public class FixtureRepository : IFixtureRepository
             .FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Fixture>> GetLiveAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Fixture>> GetLiveAsync(
+     CancellationToken cancellationToken)
     {
         return await _context.Fixtures
             .AsNoTracking()
+
+            .Include(f => f.Sport)
             .Include(f => f.HomeTeam)
             .Include(f => f.AwayTeam)
-            .Include(f => f.Sport)
+
             .Include(f => f.Scorecards)
-    .ThenInclude(s => s.BattingFigures)
-.Include(f => f.Scorecards)
-    .ThenInclude(s => s.BowlingFigures)
+                .ThenInclude(s => s.BattingFigures)
+                    .ThenInclude(b => b.Player)
+
+            .Include(f => f.Scorecards)
+                .ThenInclude(s => s.BowlingFigures)
+                    .ThenInclude(b => b.Player)
+
+            .Where(f => f.Status == MatchStatus.Live)
+
             .OrderBy(f => f.ScheduledAtUtc)
+
             .ToListAsync(cancellationToken);
     }
     public async Task<IReadOnlyList<Fixture>> SearchAsync(
