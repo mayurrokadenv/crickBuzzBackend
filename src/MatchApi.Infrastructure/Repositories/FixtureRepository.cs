@@ -35,6 +35,10 @@ public class FixtureRepository : IFixtureRepository
             .Include(f => f.HomeTeam)
             .Include(f => f.AwayTeam)
             .Include(f => f.Sport)
+            .Include(f => f.Scorecards)
+    .ThenInclude(s => s.BattingFigures)
+.Include(f => f.Scorecards)
+    .ThenInclude(s => s.BowlingFigures)
             .OrderBy(f => f.ScheduledAtUtc)
             .ToListAsync(cancellationToken);
     }

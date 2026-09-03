@@ -24,7 +24,8 @@ public class Fixture : BaseEntity
     public Score AwayScore { get; set; } = null!;
 
     public string? TotalOvers { get; set; }
-
+    public ICollection<Scorecard> Scorecards { get; set; }
+       = new List<Scorecard>();
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();
 
     public static Fixture Create(Team homeTeam, Team awayTeam, DateTime scheduledAtUtc, string totalOvers)

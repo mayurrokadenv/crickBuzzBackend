@@ -20,4 +20,5 @@ public record FixtureDetailsDto(
     string? AwayOvers,
     string TotalOvers,
     IReadOnlyList<CommentaryDto> Commentary,
-    IReadOnlyList<TopPerformerDto> TopPerformers);
+    IReadOnlyList<TopPerformerDto> TopPerformers,
+    IReadOnlyList<FixtureScorecardDto> Scorecards);

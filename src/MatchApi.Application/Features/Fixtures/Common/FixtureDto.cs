@@ -17,4 +17,6 @@ public record FixtureDto(
     int? AwayWickets,
     string? AwayOvers,
     string TotalOvers,
-    Guid SportId);
+    Guid SportId,
+    List<FixtureScorecardDto> Scorecards
+    );

@@ -157,7 +157,8 @@ public static class FixtureEndpoints
         try
         {
             var response = await sender.Send(
-                new UpdateFixtureScoreCommand(fixtureId, request.Side, request.RunsDelta, request.Overs, request.WicketsDelta),
+                new UpdateFixtureScoreCommand(fixtureId, request.Side, request.BattingPlayerId,
+        request.BowlingPlayerId, request.RunsDelta, request.Overs, request.WicketsDelta),
                 cancellationToken);
             return Results.Ok(response);
         }
@@ -216,4 +217,10 @@ public static class FixtureEndpoints
 
 public record UpdateFixtureRequest(MatchStatus? Status, MatchPhase? Phase);
 
-public record UpdateFixtureScoreRequest(FixtureSide Side, int RunsDelta, int? WicketsDelta,string? Overs);
+public record UpdateFixtureScoreRequest(
+    FixtureSide Side,
+    Guid BattingPlayerId,
+    Guid BowlingPlayerId,
+    int RunsDelta,
+    string Overs,
+    int? WicketsDelta);
