@@ -52,6 +52,26 @@ public class FixtureRepository : IFixtureRepository
 
             .ToListAsync(cancellationToken);
     }
+    public async Task<IReadOnlyList<Fixture>> GetAllAsync(
+    CancellationToken cancellationToken)
+    {
+        return await _context.Fixtures
+            .AsNoTracking()
+
+            .Include(f => f.Sport)
+            .Include(f => f.HomeTeam)
+            .Include(f => f.AwayTeam)
+
+            .Include(f => f.Scorecards)
+                .ThenInclude(s => s.BattingFigures)
+                    .ThenInclude(b => b.Player)
+            .Include(f => f.Scorecards)
+                .ThenInclude(s => s.BowlingFigures)
+                    .ThenInclude(b => b.Player)
+            .OrderBy(f => f.ScheduledAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyList<Fixture>> SearchAsync(
     string searchTerm,
     CancellationToken cancellationToken)
