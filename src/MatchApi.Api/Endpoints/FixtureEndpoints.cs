@@ -32,6 +32,11 @@ public static class FixtureEndpoints
             .WithSummary("Gets all fixtures that are currently live")
             .Produces<IReadOnlyList<FixtureDto>>(StatusCodes.Status200OK);
 
+        group.MapGet("/all", GetAllFixtures)
+            .WithName("GetAllFixtures")
+            .WithSummary("Gets all fixtures ")
+            .Produces<IReadOnlyList<FixtureDto>>(StatusCodes.Status200OK);
+
         group.MapGet("/{fixtureId:guid}", GetFixtureDetails)
             .WithName("GetFixtureDetails")
             .WithSummary("Gets the full match-center view for a fixture: info, score, commentary feed, and top performers")
@@ -74,6 +79,13 @@ public static class FixtureEndpoints
         var response = await sender.Send(new GetLiveFixturesQuery(), cancellationToken);
         return Results.Ok(response);
     }
+
+    private static async Task<IResult> GetAllFixtures(ISender sender, CancellationToken cancellationToken)
+    {
+        var response = await sender.Send(new GetAllFixturesQuery(), cancellationToken);
+        return Results.Ok(response);
+    }
+
 
     private static async Task<IResult> GetFixtureDetails(
         Guid fixtureId,

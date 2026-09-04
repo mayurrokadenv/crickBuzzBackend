@@ -9,6 +9,7 @@ public interface IFixtureRepository
     Task<Fixture?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Fixture>> GetLiveAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Fixture>> GetAllAsync(CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Fixture>> SearchAsync(string searchTerm, CancellationToken cancellationToken);
 
