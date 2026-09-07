@@ -114,6 +114,9 @@ public class Fixture : BaseEntity
 
     public void UpdateStatus(MatchStatus newStatus)
     {
+        if (Status == newStatus)
+            return;
+
         var isValidTransition = (Status, newStatus) switch
         {
             (MatchStatus.Scheduled, MatchStatus.Live) => true,
@@ -131,10 +134,8 @@ public class Fixture : BaseEntity
 
     public void SetPhase(MatchPhase phase)
     {
-        //if (Status != MatchStatus.Live)
-        //{
-        //    throw new InvalidOperationException("The match phase can only be updated while the fixture is live.");
-        //}
+        if (Phase == phase)
+            return;
 
         var isCricket = Sport.Name == Enums.Sport.Cricket.ToString();
         var isCricketPhase = phase is MatchPhase.FirstInnings or MatchPhase.SecondInnings;
