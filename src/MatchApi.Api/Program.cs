@@ -132,7 +132,7 @@ app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
 
 // Enable Swagger UI
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
