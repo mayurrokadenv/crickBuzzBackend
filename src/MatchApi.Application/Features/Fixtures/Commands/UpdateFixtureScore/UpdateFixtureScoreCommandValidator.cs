@@ -1,4 +1,5 @@
 using FluentValidation;
+using MatchApi.Domain.Enums;
 
 namespace MatchApi.Application.Features.Fixtures.Commands.UpdateFixtureScore;
 
@@ -12,8 +13,6 @@ public class UpdateFixtureScoreCommandValidator : AbstractValidator<UpdateFixtur
         RuleFor(x => x.Side)
             .IsInEnum().WithMessage("Side must be either Home or Away.");
 
-        RuleFor(x => x)
-            .Must(x => x.RunsDelta != 0 || (x.WicketsDelta ?? 0) != 0)
-            .WithMessage("At least one of RunsDelta or WicketsDelta must be non-zero.");
+
     }
 }

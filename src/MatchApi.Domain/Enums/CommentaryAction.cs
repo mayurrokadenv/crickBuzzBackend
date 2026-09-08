@@ -20,5 +20,6 @@ public enum CommentaryAction
     Offside= 15,
     Save= 16,
     No_ball=17,
-    Byes=18
+    Byes=18,
+    DotBall = 19
 }

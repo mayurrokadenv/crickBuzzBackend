@@ -10,6 +10,7 @@ public static class CommentaryActionExtensions
         CommentaryAction.Wide => 1,
         CommentaryAction.Wicket => 0,
         CommentaryAction.Three => 3,
+        CommentaryAction.DotBall => 0,
         _ => 0
     };
 
