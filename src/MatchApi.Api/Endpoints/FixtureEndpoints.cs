@@ -266,4 +266,5 @@ public record UpdateFixtureScoreRequest(
     Guid BowlingPlayerId,
     int RunsDelta,
     string Overs,
-    int? WicketsDelta);
+    int? WicketsDelta,
+    CommentaryAction Action);
