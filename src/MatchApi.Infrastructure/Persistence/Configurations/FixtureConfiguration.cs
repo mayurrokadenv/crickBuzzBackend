@@ -32,6 +32,11 @@ public class FixtureConfiguration : IEntityTypeConfiguration<Fixture>
         builder.Property(f => f.ScheduledAtUtc)
             .IsRequired();
 
+        builder.HasOne(f => f.Series)
+    .WithMany(f => f.Fixtures)
+    .HasForeignKey(f => f.SeriesId)
+    .OnDelete(DeleteBehavior.SetNull);
+
         builder.OwnsOne(f => f.HomeScore, score =>
         {
             score.Property(s => s.Runs).HasColumnName("HomeScore");

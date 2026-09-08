@@ -90,5 +90,10 @@ public class FixtureRepository : IFixtureRepository
             .OrderBy(f => f.ScheduledAtUtc)
             .ToListAsync(cancellationToken);
     }
-   
+
+
+    public void Delete(Fixture fixture)
+    {
+        _context.Fixtures.Remove(fixture);
+    }
 }

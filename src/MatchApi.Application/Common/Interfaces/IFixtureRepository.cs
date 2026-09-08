@@ -12,5 +12,6 @@ public interface IFixtureRepository
     Task<IReadOnlyList<Fixture>> GetAllAsync(CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Fixture>> SearchAsync(string searchTerm, CancellationToken cancellationToken);
+    void Delete(Fixture fixture);
 
 }

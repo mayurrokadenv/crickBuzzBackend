@@ -152,6 +152,7 @@ app.UseAuthorization();
 
 app.MapAdminEndpoints();
 app.MapFixtureEndpoints();
+app.MapSeriesEndpoints();
 app.MapTeamsEndpoints();
 app.MapPlayerEndpoints();
 app.MapCommentaryEndpoints();

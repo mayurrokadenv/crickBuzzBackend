@@ -9,6 +9,7 @@ public static class CommentaryActionExtensions
         CommentaryAction.Single => 1,
         CommentaryAction.Wide => 1,
         CommentaryAction.Wicket => 0,
+        CommentaryAction.Three => 3,
         _ => 0
     };
 
