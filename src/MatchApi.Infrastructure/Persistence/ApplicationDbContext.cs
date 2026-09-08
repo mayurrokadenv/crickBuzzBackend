@@ -20,6 +20,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Scorecard> Scorecards => Set<Scorecard>();
     public DbSet<BattingFigure> BattingFigures => Set<BattingFigure>();
     public DbSet<BowlingFigure> BowlingFigures => Set<BowlingFigure>();
+    public DbSet<Series> Series => Set<Series>();
+    public DbSet<SeriesTeam> SeriesTeams => Set<SeriesTeam>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

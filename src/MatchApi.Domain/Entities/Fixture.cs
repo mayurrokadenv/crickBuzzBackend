@@ -24,6 +24,8 @@ public class Fixture : BaseEntity
     public Score AwayScore { get; set; } = null!;
 
     public string? TotalOvers { get; set; }
+    public Guid? SeriesId { get; set; }
+    public Series? Series { get; set; }
     public ICollection<Scorecard> Scorecards { get; set; }
        = new List<Scorecard>();
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();
@@ -119,14 +121,26 @@ public class Fixture : BaseEntity
 
         var isValidTransition = (Status, newStatus) switch
         {
+            // Scheduled
             (MatchStatus.Scheduled, MatchStatus.Live) => true,
+            (MatchStatus.Scheduled, MatchStatus.Postponed) => true,
+            (MatchStatus.Scheduled, MatchStatus.Cancelled) => true,
+
+            // Live
             (MatchStatus.Live, MatchStatus.Completed) => true,
-            _ => false
+            (MatchStatus.Live, MatchStatus.Postponed) => true,
+            (MatchStatus.Live, MatchStatus.Cancelled) => true,
+
+            // Postponed
+            (MatchStatus.Postponed, MatchStatus.Live) => true,
+            (MatchStatus.Postponed, MatchStatus.Cancelled) => true,
+                _ => false
         };
 
         if (!isValidTransition)
         {
-            throw new InvalidOperationException($"Cannot change fixture status from {Status} to {newStatus}.");
+            throw new InvalidOperationException(
+                $"Cannot change fixture status from {Status} to {newStatus}.");
         }
 
         Status = newStatus;

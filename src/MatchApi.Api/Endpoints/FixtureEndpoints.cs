@@ -1,5 +1,7 @@
+using Azure;
 using FluentValidation;
 using MatchApi.Application.Features.Fixtures.Commands.CreateFixture;
+using MatchApi.Application.Features.Fixtures.Commands.DeleteFixture;
 using MatchApi.Application.Features.Fixtures.Commands.UpdateFixture;
 using MatchApi.Application.Features.Fixtures.Commands.UpdateFixtureScore;
 using MatchApi.Application.Features.Fixtures.Common;
@@ -62,8 +64,13 @@ public static class FixtureEndpoints
             .WithName("SearchFixtures")
             .WithSummary("Search fixtures by team or sport");
 
+       group.MapDelete("/{fixtureId:guid}", DeleteFixture)
+              .WithName("DeleteFixture")
+              .WithSummary("Deletes a fixture")
+              .Produces(StatusCodes.Status204NoContent)
+              .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        
+
         group.MapPatch("/{fixtureId:guid}/score", UpdateFixtureScore)
             .WithName("UpdateFixtureScore")
             .WithSummary("Adds to a team's existing score (and wickets, for cricket) on the fixture directly, without logging commentary")
@@ -132,6 +139,30 @@ public static class FixtureEndpoints
         catch (InvalidOperationException ex)
         {
             return Results.Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
+        }
+    }
+
+    private static async Task<IResult> DeleteFixture(
+     Guid fixtureId,
+     ISender sender,
+     CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await sender.Send(
+                new DeleteFixtureCommand(fixtureId),
+                cancellationToken);
+
+            return Results.Ok(new
+            {
+                message = response
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Problem(
+                ex.Message,
+                statusCode: StatusCodes.Status400BadRequest);
         }
     }
 

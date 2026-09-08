@@ -37,6 +37,7 @@ public static class DependencyInjection
         services.AddScoped<IAdminUserRepository, AdminUserRepository>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IScorecardRepository, ScorecardRepository>();
+        services.AddScoped<ISeriesRepository, SeriesRepository>();
 
         services.AddHttpClient<ICricApiService, CricApiService>(client =>
         {
