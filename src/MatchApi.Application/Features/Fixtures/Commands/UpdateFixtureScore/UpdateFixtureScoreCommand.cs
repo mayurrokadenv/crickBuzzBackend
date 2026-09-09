@@ -11,4 +11,5 @@ public record UpdateFixtureScoreCommand(
     Guid BowlingPlayerId,
     int RunsDelta,
     string Overs,
-    int? WicketsDelta) : IRequest<FixtureDto>;
+    int? WicketsDelta,
+    CommentaryAction Action) : IRequest<FixtureDto>;

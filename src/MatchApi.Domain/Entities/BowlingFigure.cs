@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MatchApi.Domain.Enums;
 
 namespace MatchApi.Domain.Entities
 {
@@ -31,8 +29,8 @@ namespace MatchApi.Domain.Entities
         public Player Player { get; private set; } = null!;
 
         public static BowlingFigure Create(
-       Guid scorecardId,
-       Guid playerId)
+            Guid scorecardId,
+            Guid playerId)
         {
             return new BowlingFigure
             {
@@ -43,9 +41,10 @@ namespace MatchApi.Domain.Entities
             };
         }
 
-        public void Update(int runs, string overs)
+        public void Update(int runs, string overs, int wickets)
         {
             Runs += runs;
+            Wickets += wickets;
             Overs = overs;
 
             var oversParts = overs.Split('.');
@@ -59,6 +58,20 @@ namespace MatchApi.Domain.Entities
                 Economy = totalBalls == 0
                     ? 0
                     : Math.Round((decimal)Runs / (totalBalls / 6m), 2);
+            }
+        }
+
+        public void UpdateActionCount(CommentaryAction action)
+        {
+            switch (action)
+            {
+                case CommentaryAction.Wide:
+                    Wides++;
+                    break;
+
+                case CommentaryAction.No_ball:
+                    NoBalls++;
+                    break;
             }
         }
     }

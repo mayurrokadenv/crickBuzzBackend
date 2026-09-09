@@ -125,10 +125,9 @@ public class UpdateFixtureScoreCommandHandler
         }
 
         // 12. Update Bowling Figure
-        bowlingFigure.Update(
-            request.RunsDelta,
-            request.Overs);
-
+        bowlingFigure.Update(request.RunsDelta,request.Overs,request.WicketsDelta ?? 0);
+        
+        bowlingFigure.UpdateActionCount(request.Action);
         // 13. Save everything
         await _unitOfWork.SaveChangesAsync(
             cancellationToken);
