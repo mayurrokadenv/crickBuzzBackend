@@ -267,4 +267,5 @@ public record UpdateFixtureScoreRequest(
     int RunsDelta,
     string Overs,
     int? WicketsDelta,
-    CommentaryAction Action);
+    CommentaryAction Action,
+    string BowlerOver);
