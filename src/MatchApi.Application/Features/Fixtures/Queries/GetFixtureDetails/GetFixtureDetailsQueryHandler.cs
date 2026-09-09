@@ -51,30 +51,20 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
                 sportName))
             .ToList();
 
-        // Grouped by the scalar PlayerId (not the Player navigation) because entries are loaded
-        // AsNoTracking without identity resolution: each row materializes its own Player instance,
-        // so grouping by the object itself would split one player's entries across several groups.
-        var topPerformers = entries
-            .Where(e => e.PlayerId is not null && e.Player is not null)
-            .GroupBy(e => e.PlayerId!.Value)
-            .Select(g =>
-            {
-                var player = g.First().Player!;
-                return new TopPerformerDto(
-                    player.Id,
-                    player.Name,
-                    player.TeamId,
-                    player.Team?.Name ?? string.Empty,
-                    g.Sum(e => e.Action.ToRuns()));
-            })
-            .OrderByDescending(p => p.RunsScored)
-            .Take(TopPerformerCount)
-            .ToList();
 
+        var scorecards = await _scorecardRepository.GetByFixtureAsync(fixture.Id,cancellationToken);
 
-        var scorecards = await _scorecardRepository.GetByFixtureAsync(
-    fixture.Id,
-    cancellationToken);
+        var topPerformers = scorecards
+    .SelectMany(s => s.BattingFigures)
+    .Where(b => b.Player != null)
+    .Select(b => new TopPerformerDto(
+        b.Player.Id,
+        b.Player.Name,
+        b.Player.TeamId,
+        b.Player.Team?.Name ?? string.Empty,
+        b.Runs)).OrderByDescending(p => p.RunsScored)
+    .Take(TopPerformerCount)
+    .ToList();
 
         var scorecardDtos = scorecards
     .Select(s => new FixtureScorecardDto(
@@ -83,6 +73,8 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
         s.InningsNo,
         s.BattingTeamId,
         s.BowlingTeamId,
+
+
 
         s.BattingFigures
             .Select(b => new BattingFigureDto(
