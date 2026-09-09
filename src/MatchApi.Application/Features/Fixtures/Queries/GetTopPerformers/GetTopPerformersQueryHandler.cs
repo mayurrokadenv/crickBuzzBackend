@@ -1,47 +1,52 @@
 using MatchApi.Application.Common.Interfaces;
 using MatchApi.Application.Features.Fixtures.Common;
-using MatchApi.Domain.Enums;
 using MediatR;
 
 namespace MatchApi.Application.Features.Fixtures.Queries.GetTopPerformers;
 
-public class GetTopPerformersQueryHandler : IRequestHandler<GetTopPerformersQuery, IReadOnlyList<TopPerformerDto>>
+public class GetTopPerformersQueryHandler
+    : IRequestHandler<GetTopPerformersQuery, IReadOnlyList<TopPerformerDto>>
 {
     private const int TopPerformerCount = 4;
 
     private readonly IFixtureRepository _fixtureRepository;
-    private readonly ICommentaryRepository _commentaryRepository;
+    private readonly IScorecardRepository _scorecardRepository;
 
-    public GetTopPerformersQueryHandler(IFixtureRepository fixtureRepository, ICommentaryRepository commentaryRepository)
+    public GetTopPerformersQueryHandler(
+        IFixtureRepository fixtureRepository,
+        IScorecardRepository scorecardRepository)
     {
         _fixtureRepository = fixtureRepository;
-        _commentaryRepository = commentaryRepository;
+        _scorecardRepository = scorecardRepository;
     }
 
-    public async Task<IReadOnlyList<TopPerformerDto>> Handle(GetTopPerformersQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TopPerformerDto>> Handle(
+        GetTopPerformersQuery request,
+        CancellationToken cancellationToken)
     {
-        _ = await _fixtureRepository.GetByIdAsync(request.FixtureId, cancellationToken)
+        // 1. Validate Fixture
+        _ = await _fixtureRepository.GetByIdAsync(
+            request.FixtureId,
+            cancellationToken)
             ?? throw new InvalidOperationException("Fixture not found.");
 
-        var entries = await _commentaryRepository.GetByFixtureIdAsync(request.FixtureId, cancellationToken);
+        // 2. Get both scorecards for this fixture
+        var scorecards = await _scorecardRepository.GetByFixtureAsync(
+            request.FixtureId,
+            cancellationToken);
 
-        // Grouped by the scalar PlayerId (not the Player navigation) because entries are loaded
-        // AsNoTracking without identity resolution: each row materializes its own Player instance,
-        // so grouping by the object itself would split one player's entries across several groups.
-        return entries
-            .Where(e => e.PlayerId is not null && e.Player is not null)
-            .GroupBy(e => e.PlayerId!.Value)
-            .Select(g =>
-            {
-                var player = g.First().Player!;
-                return new TopPerformerDto(
-                    player.Id,
-                    player.Name,
-                    player.TeamId,
-                    player.Team?.Name ?? string.Empty,
-                    g.Sum(e => e.Action.ToRuns()));
-            })
-            .OrderByDescending(p => p.RunsScored)
+        // 3. Get batting figures from all innings/scorecards
+        return scorecards
+            .SelectMany(s => s.BattingFigures)
+            .Where(b => b.Player is not null)
+            .Select(b => new TopPerformerDto(
+                b.PlayerId,
+                b.Player!.Name,
+                b.Player.TeamId,
+                b.Player.Team?.Name ?? string.Empty,
+                b.Runs
+            ))
+            .OrderByDescending(x => x.RunsScored)
             .Take(TopPerformerCount)
             .ToList();
     }
