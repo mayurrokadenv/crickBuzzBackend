@@ -201,7 +201,7 @@ public static class FixtureEndpoints
         {
             var response = await sender.Send(
                 new UpdateFixtureScoreCommand(fixtureId, request.Side, request.BattingPlayerId,
-        request.BowlingPlayerId, request.RunsDelta, request.Overs, request.WicketsDelta,request.Action),
+        request.BowlingPlayerId, request.RunsDelta, request.Overs, request.WicketsDelta,request.Action,request.BowlerOver),
                 cancellationToken);
             return Results.Ok(response);
         }
