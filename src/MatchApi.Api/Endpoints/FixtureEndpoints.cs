@@ -174,7 +174,7 @@ public static class FixtureEndpoints
     {
         try
         {
-            var response = await sender.Send(new UpdateFixtureCommand(fixtureId, request.Status, request.Phase), cancellationToken);
+            var response = await sender.Send(new UpdateFixtureCommand(fixtureId, request.Status, request.Phase,request.BattingTeamId), cancellationToken);
             return Results.Ok(response);
         }
         catch (ValidationException ex)
@@ -258,7 +258,7 @@ public static class FixtureEndpoints
 
 }
 
-public record UpdateFixtureRequest(MatchStatus? Status, MatchPhase? Phase);
+public record UpdateFixtureRequest(MatchStatus? Status,MatchPhase? Phase,Guid? BattingTeamId);
 
 public record UpdateFixtureScoreRequest(
     FixtureSide Side,

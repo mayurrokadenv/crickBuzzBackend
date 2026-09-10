@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MatchApi.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,6 +26,7 @@ namespace MatchApi.Domain.Entities
         // Navigation
         public Scorecard Scorecard { get; private set; } = null!;
         public Player Player { get; private set; } = null!;
+        public bool Out { get; private set; }
 
         public static BattingFigure Create(
       Guid scorecardId,
@@ -38,21 +40,29 @@ namespace MatchApi.Domain.Entities
             };
         }
 
-        public void Update(int runs)
+        public void Update(int runs, CommentaryAction action)
         {
             Runs += runs;
             Balls++;
 
-            if (runs == 4)
-                Fours++;
+            if (action == CommentaryAction.Wicket)
+            {
+                Out = true;
+            }
 
-            if (runs == 6)
+            if (action == CommentaryAction.Four)
+            {
+                Fours++;
+            }
+
+            if (action == CommentaryAction.Six)
+            {
                 Sixes++;
+            }
 
             StrikeRate = Balls == 0
                 ? 0
                 : Math.Round((decimal)Runs / Balls * 100, 2);
         }
-
     }
 }
