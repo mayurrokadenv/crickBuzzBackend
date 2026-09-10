@@ -26,6 +26,7 @@ public class Fixture : BaseEntity
     public string? TotalOvers { get; set; }
     public Guid? SeriesId { get; set; }
     public Series? Series { get; set; }
+    public Guid? BattingTeamId { get; private set; }
     public ICollection<Scorecard> Scorecards { get; set; }
        = new List<Scorecard>();
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();
@@ -114,38 +115,49 @@ public class Fixture : BaseEntity
         ScoreFor(side).Apply(runsDelta, wicketsDelta ?? 0,overs);
     }
 
-    public void UpdateStatus(MatchStatus newStatus)
+    public void UpdateStatus(
+    MatchStatus newStatus,
+    Guid? battingTeamId = null)
     {
-        if (Status == newStatus)
-            return;
-
-        var isValidTransition = (Status, newStatus) switch
+        if (Status != newStatus)
         {
-            // Scheduled
-            (MatchStatus.Scheduled, MatchStatus.Live) => true,
-            (MatchStatus.Scheduled, MatchStatus.Postponed) => true,
-            (MatchStatus.Scheduled, MatchStatus.Cancelled) => true,
+            var isValidTransition = (Status, newStatus) switch
+            {
+                (MatchStatus.Scheduled, MatchStatus.Live) => true,
+                (MatchStatus.Scheduled, MatchStatus.Postponed) => true,
+                (MatchStatus.Scheduled, MatchStatus.Cancelled) => true,
 
-            // Live
-            (MatchStatus.Live, MatchStatus.Completed) => true,
-            (MatchStatus.Live, MatchStatus.Postponed) => true,
-            (MatchStatus.Live, MatchStatus.Cancelled) => true,
+                (MatchStatus.Live, MatchStatus.Completed) => true,
+                (MatchStatus.Live, MatchStatus.Postponed) => true,
+                (MatchStatus.Live, MatchStatus.Cancelled) => true,
 
-            // Postponed
-            (MatchStatus.Postponed, MatchStatus.Live) => true,
-            (MatchStatus.Postponed, MatchStatus.Cancelled) => true,
+                (MatchStatus.Postponed, MatchStatus.Live) => true,
+                (MatchStatus.Postponed, MatchStatus.Cancelled) => true,
+
                 _ => false
-        };
+            };
 
-        if (!isValidTransition)
-        {
-            throw new InvalidOperationException(
-                $"Cannot change fixture status from {Status} to {newStatus}.");
+            if (!isValidTransition)
+            {
+                throw new InvalidOperationException(
+                    $"Cannot change fixture status from {Status} to {newStatus}.");
+            }
+
+            Status = newStatus;
         }
 
-        Status = newStatus;
-    }
+        if (battingTeamId is not null)
+        {
+            if (battingTeamId != HomeTeamId &&
+                battingTeamId != AwayTeamId)
+            {
+                throw new InvalidOperationException(
+                    "Batting team must be either the home team or away team.");
+            }
 
+            BattingTeamId = battingTeamId;
+        }
+    }
     public void SetPhase(MatchPhase phase)
     {
         if (Phase == phase)

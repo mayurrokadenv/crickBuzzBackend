@@ -104,8 +104,7 @@ public class UpdateFixtureScoreCommandHandler
         }
 
         // 9. Update Batting Figure
-        battingFigure.Update(
-            request.RunsDelta);
+        battingFigure.Update(request.RunsDelta,request.Action);
 
         // 10. Get Bowling Figure
         var bowlingFigure = scorecard.BowlingFigures
