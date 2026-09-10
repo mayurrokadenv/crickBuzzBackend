@@ -19,6 +19,7 @@ public record FixtureDetailsDto(
     int? AwayWickets,
     string? AwayOvers,
     string TotalOvers,
+    Guid? BattingTeamId,
     IReadOnlyList<CommentaryDto> Commentary,
     IReadOnlyList<TopPerformerDto> TopPerformers,
     IReadOnlyList<FixtureScorecardDto> Scorecards);

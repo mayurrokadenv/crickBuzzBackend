@@ -121,6 +121,7 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
             fixture.AwayScore.Wickets,
             fixture.AwayScore.Overs,
             fixture.TotalOvers,
+            fixture.BattingTeamId,
             commentary,
             topPerformers,
             scorecardDtos);
