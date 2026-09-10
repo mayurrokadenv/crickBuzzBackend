@@ -1,4 +1,5 @@
 ﻿using MatchApi.Application.Features.SeriesManagement.Commands.CreateSeries;
+using MatchApi.Application.Features.SeriesManagement.Queries.GetSeries;
 using MediatR;
 
 namespace MatchApi.Api.Endpoints;
@@ -16,6 +17,11 @@ public static class SeriesEndpoints
             .WithSummary("Creates a series with selected teams")
             .Produces<Guid>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapGet("/", GetSeries)
+            .WithName("GetSeries")
+            .WithSummary("Gets all series")
+            .Produces(StatusCodes.Status200OK);
 
         return app;
     }
@@ -42,6 +48,17 @@ public static class SeriesEndpoints
                 ex.Message,
                 statusCode: StatusCodes.Status400BadRequest);
         }
+    }
+
+    private static async Task<IResult> GetSeries(
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        var series = await sender.Send(
+            new GetSeriesQuery(),
+            cancellationToken);
+
+        return Results.Ok(series);
     }
 }
 

@@ -111,7 +111,7 @@ public class UpdateFixtureScoreCommandHandler
         var bowlingFigure = scorecard.BowlingFigures
             .FirstOrDefault(x =>
                 x.PlayerId == request.BowlingPlayerId);
-
+       
         // 11. Create Bowling Figure if player doesn't exist
         if (bowlingFigure is null)
         {
@@ -123,10 +123,10 @@ public class UpdateFixtureScoreCommandHandler
                 bowlingFigure,
                 cancellationToken);
         }
-
+     
         // 12. Update Bowling Figure
-        bowlingFigure.Update(request.RunsDelta,request.Overs,request.WicketsDelta ?? 0);
-        
+        bowlingFigure.Update(request.RunsDelta,request.BowlerOver, request.WicketsDelta ?? 0);
+     
         bowlingFigure.UpdateActionCount(request.Action);
         // 13. Save everything
         await _unitOfWork.SaveChangesAsync(
