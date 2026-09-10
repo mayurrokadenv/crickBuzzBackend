@@ -18,5 +18,6 @@ public record FixtureDto(
     string? AwayOvers,
     string TotalOvers,
     Guid SportId,
+    Guid? BattingTeamId,
     List<FixtureScorecardDto> Scorecards
     );

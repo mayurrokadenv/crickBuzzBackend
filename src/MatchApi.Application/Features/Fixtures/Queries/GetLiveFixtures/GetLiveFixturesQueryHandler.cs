@@ -45,7 +45,7 @@ public class GetLiveFixturesQueryHandler
 
                 f.TotalOvers,
                 f.SportId,
-
+                f.BattingTeamId,
                 f.Scorecards
                     .Select(s => new FixtureScorecardDto(
                         s.Id,

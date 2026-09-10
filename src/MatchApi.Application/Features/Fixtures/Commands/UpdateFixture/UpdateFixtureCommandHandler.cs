@@ -129,7 +129,7 @@ public class UpdateFixtureCommandHandler
             fixture.TotalOvers,
 
             fixture.SportId,
-
+            fixture.BattingTeamId,
             scorecardDtos
         );
     }
