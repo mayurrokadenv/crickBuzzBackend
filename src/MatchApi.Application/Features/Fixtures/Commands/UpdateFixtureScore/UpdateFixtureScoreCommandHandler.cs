@@ -111,7 +111,7 @@ public class UpdateFixtureScoreCommandHandler
         var bowlingFigure = scorecard.BowlingFigures
             .FirstOrDefault(x =>
                 x.PlayerId == request.BowlingPlayerId);
-       
+
         // 11. Create Bowling Figure if player doesn't exist
         if (bowlingFigure is null)
         {
@@ -123,10 +123,10 @@ public class UpdateFixtureScoreCommandHandler
                 bowlingFigure,
                 cancellationToken);
         }
-     
+
         // 12. Update Bowling Figure
         bowlingFigure.Update(request.RunsDelta,request.BowlerOver, request.WicketsDelta ?? 0);
-     
+
         bowlingFigure.UpdateActionCount(request.Action);
         // 13. Save everything
         await _unitOfWork.SaveChangesAsync(
@@ -184,7 +184,49 @@ public class UpdateFixtureScoreCommandHandler
             .ToList();
 
         // =========================================================
-        // 16. BROADCAST LATEST SCORE
+        // 16. MAP SCORECARDS -> SIGNALR DTOs
+        // =========================================================
+
+        var scorecardUpdates = scorecards
+            .Select(s => new ScorecardUpdateDto(
+                s.Id,
+                s.FixtureId,
+                s.InningsNo,
+                s.BattingTeamId,
+                s.BowlingTeamId,
+
+                // Batting Figures
+                s.BattingFigures
+                    .Select(b => new BattingFigureUpdateDto(
+                        b.Id,
+                        b.PlayerId,
+                        b.Player?.Name ?? string.Empty,
+                        b.Runs,
+                        b.Balls,
+                        b.Fours,
+                        b.Sixes,
+                        b.StrikeRate))
+                    .ToList(),
+
+                // Bowling Figures
+                s.BowlingFigures
+                    .Select(b => new BowlingFigureUpdateDto(
+                        b.Id,
+                        b.PlayerId,
+                        b.Player?.Name ?? string.Empty,
+                        b.Overs,
+                        b.Maidens,
+                        b.Runs,
+                        b.Wickets,
+                        b.NoBalls,
+                        b.Wides,
+                        b.Economy))
+                    .ToList()
+            ))
+            .ToList();
+
+        // =========================================================
+        // 17. BROADCAST LATEST SCORE + SCORECARDS
         // =========================================================
 
         var scoreUpdate = new ScoreUpdateDto(
@@ -196,14 +238,15 @@ public class UpdateFixtureScoreCommandHandler
 
             fixture.AwayScore.Runs,
             fixture.AwayScore.Wickets ?? 0,
-            fixture.AwayScore.Overs);
+            fixture.AwayScore.Overs,
+            scorecardUpdates);
 
         await _scoreBroadcaster.BroadcastAsync(
             scoreUpdate,
             cancellationToken);
 
         // =========================================================
-        // 17. RETURN COMPLETE FIXTURE RESPONSE
+        // 18. RETURN COMPLETE FIXTURE RESPONSE
         // =========================================================
 
         return new FixtureDto(
@@ -234,8 +277,7 @@ public class UpdateFixtureScoreCommandHandler
 
             fixture.SportId,
 
-            // IMPORTANT:
-            // scorecardDtos already List<ScorecardDto>
+            // Existing API DTO
             scorecardDtos
         );
     }
