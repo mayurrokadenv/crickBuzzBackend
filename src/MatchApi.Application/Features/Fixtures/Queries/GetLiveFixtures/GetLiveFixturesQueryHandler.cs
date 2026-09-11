@@ -63,7 +63,8 @@ public class GetLiveFixturesQueryHandler
                                 b.Balls,
                                 b.Fours,
                                 b.Sixes,
-                                b.StrikeRate))
+                                b.StrikeRate,
+                                b.Out))
                             .ToList(),
 
                         s.BowlingFigures

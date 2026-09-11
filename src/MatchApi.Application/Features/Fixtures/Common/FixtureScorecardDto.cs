@@ -18,7 +18,8 @@ public record BattingFigureDto(
     int Balls,
     int Fours,
     int Sixes,
-    decimal StrikeRate
+    decimal StrikeRate,
+    bool Out
 );
 
 public record BowlingFigureDto(

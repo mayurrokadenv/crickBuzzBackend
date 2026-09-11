@@ -85,7 +85,8 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
                 b.Balls,
                 b.Fours,
                 b.Sixes,
-                b.StrikeRate))
+                b.StrikeRate,
+                b.Out))
             .ToList(),
 
         s.BowlingFigures
