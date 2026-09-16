@@ -268,4 +268,5 @@ public record UpdateFixtureScoreRequest(
     string Overs,
     int? WicketsDelta,
     CommentaryAction Action,
-    string BowlerOver);
+    string BowlerOver,
+    Guid WinningTeamId);

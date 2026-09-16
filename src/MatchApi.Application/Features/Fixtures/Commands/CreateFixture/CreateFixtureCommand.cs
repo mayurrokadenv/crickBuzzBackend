@@ -6,4 +6,5 @@ public record CreateFixtureCommand(
     Guid HomeTeamId,
     Guid AwayTeamId,
     string TotalOvers,
-    DateTime ScheduledAtUtc) : IRequest<CreateFixtureResponse>;
+    DateTime ScheduledAtUtc,
+    Guid? SeriesId) : IRequest<CreateFixtureResponse>;

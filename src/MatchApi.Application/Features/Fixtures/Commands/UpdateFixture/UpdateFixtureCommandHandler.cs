@@ -131,6 +131,7 @@ public class UpdateFixtureCommandHandler
 
             fixture.SportId,
             fixture.BattingTeamId,
+            fixture.SeriesId,
             scorecardDtos
         );
     }

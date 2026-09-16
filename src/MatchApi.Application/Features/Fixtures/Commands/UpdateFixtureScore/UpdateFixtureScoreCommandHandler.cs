@@ -277,6 +277,7 @@ public class UpdateFixtureScoreCommandHandler
 
             fixture.SportId,
             fixture.BattingTeamId,
+            fixture.SeriesId,
             // Existing API DTO
             scorecardDtos
         );
