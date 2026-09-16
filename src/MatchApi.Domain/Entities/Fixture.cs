@@ -27,6 +27,7 @@ public class Fixture : BaseEntity
     public Guid? SeriesId { get; set; }
     public Series? Series { get; set; }
     public Guid? BattingTeamId { get; private set; }
+    public Guid? WinningTeamId { get; private set; }
     public ICollection<Scorecard> Scorecards { get; set; }
        = new List<Scorecard>();
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();

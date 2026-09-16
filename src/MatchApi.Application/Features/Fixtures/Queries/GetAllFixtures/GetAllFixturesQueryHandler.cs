@@ -46,6 +46,7 @@ public class GetAllFixturesQueryHandler
                 f.TotalOvers,
                 f.SportId,
                 f.BattingTeamId,
+                f.SeriesId,
                 f.Scorecards
                     .Select(s => new FixtureScorecardDto(
                         s.Id,
