@@ -20,5 +20,6 @@ public record FixtureDto(
     Guid SportId,
     Guid? BattingTeamId,
     Guid? SeriesId,
+    Guid? WinningTeamId,
     InningsScorecardsDto Scorecards
     );

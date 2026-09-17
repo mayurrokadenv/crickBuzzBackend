@@ -199,7 +199,7 @@ public class UpdateFixtureScoreCommandHandler
                 s.InningsNo,
                 s.BattingTeamId,
                 s.BowlingTeamId,
-
+                fixture.WinningTeamId ?? Guid.Empty,
                 // Batting Figures
                 s.BattingFigures
                     .Select(b => new BattingFigureUpdateDto(
@@ -283,6 +283,7 @@ public class UpdateFixtureScoreCommandHandler
             fixture.SportId,
             fixture.BattingTeamId,
             fixture.SeriesId,
+            fixture.WinningTeamId,
             // Existing API DTO
             inningsScorecards
         );

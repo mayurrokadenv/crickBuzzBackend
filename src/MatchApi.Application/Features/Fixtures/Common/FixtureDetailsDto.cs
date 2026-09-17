@@ -20,6 +20,7 @@ public record FixtureDetailsDto(
     string? AwayOvers,
     string TotalOvers,
     Guid? BattingTeamId,
+    Guid? WinningTeamId,
     IReadOnlyList<CommentaryDto> Commentary,
     IReadOnlyList<TopPerformerDto> TopPerformers,
     InningsScorecardsDto Scorecards);
