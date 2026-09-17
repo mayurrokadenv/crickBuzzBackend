@@ -128,6 +128,7 @@ scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
             fixture.AwayScore.Overs,
             fixture.TotalOvers,
             fixture.BattingTeamId,
+            fixture.WinningTeamId,
             commentary,
             topPerformers,
             inningsScorecards);

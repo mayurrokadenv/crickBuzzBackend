@@ -91,6 +91,7 @@ public class GetLiveFixturesQueryHandler
                     f.SportId,
                     f.BattingTeamId,
                     f.SeriesId,
+                    f.WinningTeamId,
                     inningsScorecards
                 );
             })

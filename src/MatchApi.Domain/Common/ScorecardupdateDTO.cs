@@ -4,6 +4,7 @@
     int InningsNo,
     Guid BattingTeamId,
     Guid BowlingTeamId,
+    Guid? WinningTeamId,
     IReadOnlyList<BattingFigureUpdateDto> BattingFigures,
     IReadOnlyList<BowlingFigureUpdateDto> BowlingFigures);
 

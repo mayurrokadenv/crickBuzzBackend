@@ -138,6 +138,7 @@ scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
             fixture.SportId,
             fixture.BattingTeamId,
             fixture.SeriesId,
+            fixture.WinningTeamId,
             inningsScorecards
         );
     }

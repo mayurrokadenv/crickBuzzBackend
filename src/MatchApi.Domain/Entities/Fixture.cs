@@ -32,7 +32,7 @@ public class Fixture : BaseEntity
        = new List<Scorecard>();
     public ICollection<CommentaryEntry> CommentaryEntries { get; set; } = new List<CommentaryEntry>();
 
-    public static Fixture Create(Team homeTeam, Team awayTeam, DateTime scheduledAtUtc, string totalOvers)
+    public static Fixture Create(Team homeTeam, Team awayTeam, DateTime scheduledAtUtc, string totalOvers,Guid? seriesId)
     {
         if (homeTeam.Id == awayTeam.Id)
             throw new InvalidOperationException("A team cannot play against itself.");
@@ -52,6 +52,7 @@ public class Fixture : BaseEntity
             HomeScore = Score.Zero(tracksWickets),
             AwayScore = Score.Zero(tracksWickets),
             TotalOvers = totalOvers,
+            SeriesId = seriesId
         };
     }
 

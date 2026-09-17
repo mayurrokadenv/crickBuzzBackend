@@ -28,7 +28,7 @@ public class CreateFixtureCommandHandler : IRequestHandler<CreateFixtureCommand,
         var awayTeam = await _teamRepository.GetByIdAsync(request.AwayTeamId, cancellationToken)
             ?? throw new InvalidOperationException("Away team not found.");
 
-        var fixture = DomainFixture.Create(homeTeam, awayTeam, request.ScheduledAtUtc,request.TotalOvers);
+        var fixture = DomainFixture.Create(homeTeam, awayTeam, request.ScheduledAtUtc,request.TotalOvers,request.SeriesId);
 
         await _fixtureRepository.AddAsync(fixture, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
