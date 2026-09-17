@@ -174,7 +174,7 @@ public static class FixtureEndpoints
     {
         try
         {
-            var response = await sender.Send(new UpdateFixtureCommand(fixtureId, request.Status, request.Phase,request.BattingTeamId), cancellationToken);
+            var response = await sender.Send(new UpdateFixtureCommand(fixtureId, request.Status, request.Phase,request.BattingTeamId,request.WinningTeamId), cancellationToken);
             return Results.Ok(response);
         }
         catch (ValidationException ex)
@@ -258,7 +258,7 @@ public static class FixtureEndpoints
 
 }
 
-public record UpdateFixtureRequest(MatchStatus? Status,MatchPhase? Phase,Guid? BattingTeamId);
+public record UpdateFixtureRequest(MatchStatus? Status,MatchPhase? Phase,Guid? BattingTeamId,Guid? WinningTeamId);
 
 public record UpdateFixtureScoreRequest(
     FixtureSide Side,
@@ -268,5 +268,5 @@ public record UpdateFixtureScoreRequest(
     string Overs,
     int? WicketsDelta,
     CommentaryAction Action,
-    string BowlerOver,
-    Guid WinningTeamId);
+    string BowlerOver
+    );

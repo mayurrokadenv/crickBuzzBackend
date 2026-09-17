@@ -6,4 +6,7 @@ public interface ISeriesRepository
 {
     Task AddAsync(Series series,CancellationToken cancellationToken);
     Task<IReadOnlyList<Series>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Series?> GetSeriesByIdAsync(
+    Guid seriesId,
+    CancellationToken cancellationToken);
 }

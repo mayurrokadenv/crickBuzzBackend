@@ -1,4 +1,5 @@
 ﻿using MatchApi.Application.Features.SeriesManagement.Commands.CreateSeries;
+using MatchApi.Application.Features.SeriesManagement.Queries.GetPointsTable;
 using MatchApi.Application.Features.SeriesManagement.Queries.GetSeries;
 using MediatR;
 
@@ -7,7 +8,7 @@ namespace MatchApi.Api.Endpoints;
 public static class SeriesEndpoints
 {
     public static IEndpointRouteBuilder MapSeriesEndpoints(
-        this IEndpointRouteBuilder app)
+     this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/series")
             .WithTags("Series");
@@ -22,6 +23,12 @@ public static class SeriesEndpoints
             .WithName("GetSeries")
             .WithSummary("Gets all series")
             .Produces(StatusCodes.Status200OK);
+
+        group.MapGet("/{seriesId:guid}/points-table", GetPointsTable)
+            .WithName("GetSeriesPointsTable")
+            .WithSummary("Gets points table for a series")
+            .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         return app;
     }
@@ -59,6 +66,18 @@ public static class SeriesEndpoints
             cancellationToken);
 
         return Results.Ok(series);
+    }
+
+    private static async Task<IResult> GetPointsTable(
+    Guid seriesId,
+    ISender sender,
+    CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(
+            new GetSeriesPointsTableQuery(seriesId),
+            cancellationToken);
+
+        return Results.Ok(result);
     }
 }
 
