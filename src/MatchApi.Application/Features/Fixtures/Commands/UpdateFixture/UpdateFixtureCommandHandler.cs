@@ -34,7 +34,7 @@ public class UpdateFixtureCommandHandler
         // 2. Update Status
         if (request.Status is not null)
         {
-            fixture.UpdateStatus(request.Status.Value, request.BattingTeamId);
+            fixture.UpdateStatus(request.Status.Value, request.BattingTeamId,request.WinningTeamId);
         }
 
         // 3. Update Phase

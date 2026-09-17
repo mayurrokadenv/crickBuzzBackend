@@ -34,4 +34,16 @@ public class SeriesRepository : ISeriesRepository
             .OrderBy(x => x.Name)
             .ToListAsync(cancellationToken);
     }
+    public async Task<Series?> GetSeriesByIdAsync(
+    Guid seriesId,
+    CancellationToken cancellationToken)
+    {
+        return await _context.Series
+            .Include(s => s.SeriesTeams)
+                .ThenInclude(st => st.Team)
+            .Include(s => s.Fixtures)
+            .FirstOrDefaultAsync(
+                s => s.Id == seriesId,
+                cancellationToken);
+    }
 }

@@ -118,7 +118,8 @@ public class Fixture : BaseEntity
 
     public void UpdateStatus(
     MatchStatus newStatus,
-    Guid? battingTeamId = null)
+    Guid? battingTeamId = null,
+    Guid? winningTeamId = null)
     {
         if (Status != newStatus)
         {
@@ -157,6 +158,18 @@ public class Fixture : BaseEntity
             }
 
             BattingTeamId = battingTeamId;
+        }
+
+        if (winningTeamId is not null)
+        {
+            if (winningTeamId != HomeTeamId &&
+                winningTeamId != AwayTeamId)
+            {
+                throw new InvalidOperationException(
+                    "Winning team must be either the home team or away team.");
+            }
+
+            WinningTeamId = winningTeamId;
         }
     }
     public void SetPhase(MatchPhase phase)
