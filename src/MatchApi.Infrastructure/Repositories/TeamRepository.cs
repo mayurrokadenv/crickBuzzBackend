@@ -71,4 +71,25 @@ public class TeamRepository : ITeamRepository
             .FirstOrDefaultAsync(x => x.SportId == sportId && x.Name.ToLower() == teamName.ToLower(), cancellationToken);
         return team != null;
     }
+
+    public async Task<bool> IsTeamUsedAsync(
+    Guid teamId,
+    CancellationToken cancellationToken)
+    {
+        var isUsedInSeries = await _context.SeriesTeams
+            .AnyAsync(
+                x => x.TeamId == teamId,
+                cancellationToken);
+
+        if (isUsedInSeries)
+            return true;
+
+        var isUsedInFixture = await _context.Fixtures
+            .AnyAsync(
+                x => x.HomeTeamId == teamId ||
+                     x.AwayTeamId == teamId,
+                cancellationToken);
+
+        return isUsedInFixture;
+    }
 }
