@@ -13,5 +13,8 @@ public interface ITeamRepository
     Guid sportId,
     string teamName,
     CancellationToken cancellationToken);
+    Task<bool> IsTeamUsedAsync(
+    Guid teamId,
+    CancellationToken cancellationToken);
 
 }
