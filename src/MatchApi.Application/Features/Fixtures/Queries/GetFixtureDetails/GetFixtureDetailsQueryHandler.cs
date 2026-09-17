@@ -74,7 +74,7 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
         s.BattingTeamId,
         s.BowlingTeamId,
 
-
+  
 
         s.BattingFigures
             .Select(b => new BattingFigureDto(
@@ -105,6 +105,11 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
     ))
     .ToList();
 
+        var inningsScorecards = new InningsScorecardsDto(
+scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
+scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
+);
+
         return new FixtureDetailsDto(
             fixture.Id,
             fixture.HomeTeamId,
@@ -125,6 +130,6 @@ public class GetFixtureDetailsQueryHandler : IRequestHandler<GetFixtureDetailsQu
             fixture.BattingTeamId,
             commentary,
             topPerformers,
-            scorecardDtos);
+            inningsScorecards);
     }
 }

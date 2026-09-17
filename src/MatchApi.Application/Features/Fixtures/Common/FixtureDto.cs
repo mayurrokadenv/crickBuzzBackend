@@ -20,5 +20,5 @@ public record FixtureDto(
     Guid SportId,
     Guid? BattingTeamId,
     Guid? SeriesId,
-    List<FixtureScorecardDto> Scorecards
+    InningsScorecardsDto Scorecards
     );

@@ -99,6 +99,12 @@ public class UpdateFixtureCommandHandler
             ))
             .ToList();
 
+
+        var inningsScorecards = new InningsScorecardsDto(
+scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
+scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
+);
+
         // =========================================================
         // 7. RETURN COMPLETE FIXTURE RESPONSE
         // =========================================================
@@ -132,7 +138,7 @@ public class UpdateFixtureCommandHandler
             fixture.SportId,
             fixture.BattingTeamId,
             fixture.SeriesId,
-            scorecardDtos
+            inningsScorecards
         );
     }
 }

@@ -183,6 +183,11 @@ public class UpdateFixtureScoreCommandHandler
             ))
             .ToList();
 
+        var inningsScorecards = new InningsScorecardsDto(
+    scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
+    scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
+);
+
         // =========================================================
         // 16. MAP SCORECARDS -> SIGNALR DTOs
         // =========================================================
@@ -279,7 +284,7 @@ public class UpdateFixtureScoreCommandHandler
             fixture.BattingTeamId,
             fixture.SeriesId,
             // Existing API DTO
-            scorecardDtos
+            inningsScorecards
         );
     }
 }
