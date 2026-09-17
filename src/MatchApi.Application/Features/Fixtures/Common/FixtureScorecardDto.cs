@@ -34,3 +34,7 @@ public record BowlingFigureDto(
     int Wides,
     decimal Economy
 );
+public record InningsScorecardsDto(
+    FixtureScorecardDto? Innings1,
+    FixtureScorecardDto? Innings2
+);

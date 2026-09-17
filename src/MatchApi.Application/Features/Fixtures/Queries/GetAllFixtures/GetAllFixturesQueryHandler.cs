@@ -16,38 +16,17 @@ public class GetAllFixturesQueryHandler
     }
 
     public async Task<IReadOnlyList<FixtureDto>> Handle(
-        GetAllFixturesQuery request,
-        CancellationToken cancellationToken)
+      GetAllFixturesQuery request,
+      CancellationToken cancellationToken)
     {
         var fixtures =
             await _fixtureRepository.GetAllAsync(
                 cancellationToken);
 
         return fixtures
-            .Select(f => new FixtureDto(
-                f.Id,
-                f.HomeTeamId,
-                f.HomeTeam?.Name ?? string.Empty,
-                f.AwayTeamId,
-                f.AwayTeam?.Name ?? string.Empty,
-                f.Sport?.Name ?? string.Empty,
-                f.ScheduledAtUtc,
-                f.Status.ToString(),
-                f.Phase?.ToString(),
-
-                f.HomeScore.Runs,
-                f.HomeScore.Wickets,
-                f.HomeScore.Overs,
-
-                f.AwayScore.Runs,
-                f.AwayScore.Wickets,
-                f.AwayScore.Overs,
-
-                f.TotalOvers,
-                f.SportId,
-                f.BattingTeamId,
-                f.SeriesId,
-                f.Scorecards
+            .Select(f =>
+            {
+                var scorecardDtos = f.Scorecards
                     .Select(s => new FixtureScorecardDto(
                         s.Id,
                         s.FixtureId,
@@ -82,8 +61,39 @@ public class GetAllFixturesQueryHandler
                                 b.Economy))
                             .ToList()
                     ))
-                    .ToList()
-            ))
+                    .ToList();
+
+                var inningsScorecards = new InningsScorecardsDto(
+                    scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
+                    scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
+                );
+
+                return new FixtureDto(
+                    f.Id,
+                    f.HomeTeamId,
+                    f.HomeTeam?.Name ?? string.Empty,
+                    f.AwayTeamId,
+                    f.AwayTeam?.Name ?? string.Empty,
+                    f.Sport?.Name ?? string.Empty,
+                    f.ScheduledAtUtc,
+                    f.Status.ToString(),
+                    f.Phase?.ToString(),
+
+                    f.HomeScore.Runs,
+                    f.HomeScore.Wickets,
+                    f.HomeScore.Overs,
+
+                    f.AwayScore.Runs,
+                    f.AwayScore.Wickets,
+                    f.AwayScore.Overs,
+
+                    f.TotalOvers,
+                    f.SportId,
+                    f.BattingTeamId,
+                    f.SeriesId,
+                    inningsScorecards
+                );
+            })
             .ToList();
     }
 }

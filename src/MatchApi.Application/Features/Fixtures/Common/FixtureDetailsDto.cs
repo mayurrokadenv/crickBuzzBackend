@@ -22,4 +22,4 @@ public record FixtureDetailsDto(
     Guid? BattingTeamId,
     IReadOnlyList<CommentaryDto> Commentary,
     IReadOnlyList<TopPerformerDto> TopPerformers,
-    IReadOnlyList<FixtureScorecardDto> Scorecards);
+    InningsScorecardsDto Scorecards);
