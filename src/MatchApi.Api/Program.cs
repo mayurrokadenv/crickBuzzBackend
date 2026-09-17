@@ -48,6 +48,7 @@ builder.Services.AddProblemDetails();
     builder.Services.AddSignalR();
 builder.Services.AddScoped<ICommentaryBroadcaster, SignalRCommentaryBroadcaster>();
 builder.Services.AddScoped<IScoreBroadcaster, SignalRScoreBroadcaster>();
+builder.Services.AddScoped<IFixtureBroadcaster,SignalRFixtureBroadcaster>();
 
 const string ReactClientCorsPolicy = "ReactClient";
     var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()

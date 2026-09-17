@@ -1,4 +1,5 @@
 using MatchApi.Application.Common.Interfaces;
+using MatchApi.Domain.DTOs;
 using MediatR;
 using DomainFixture = MatchApi.Domain.Entities.Fixture;
 
@@ -9,15 +10,17 @@ public class CreateFixtureCommandHandler : IRequestHandler<CreateFixtureCommand,
     private readonly ITeamRepository _teamRepository;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IFixtureBroadcaster _fixtureBroadcaster;
 
     public CreateFixtureCommandHandler(
         ITeamRepository teamRepository,
         IFixtureRepository fixtureRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, IFixtureBroadcaster fixtureBroadcaster)
     {
         _teamRepository = teamRepository;
         _fixtureRepository = fixtureRepository;
         _unitOfWork = unitOfWork;
+        _fixtureBroadcaster = fixtureBroadcaster;
     }
 
     public async Task<CreateFixtureResponse> Handle(CreateFixtureCommand request, CancellationToken cancellationToken)
@@ -32,6 +35,22 @@ public class CreateFixtureCommandHandler : IRequestHandler<CreateFixtureCommand,
 
         await _fixtureRepository.AddAsync(fixture, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var fixtureCreatedDto = new FixtureCreatedSignalRDto(
+    fixture.Id,
+    homeTeam.Id,
+    homeTeam.Name,
+    awayTeam.Id,
+    awayTeam.Name,
+    fixture.SportId,
+    fixture.SeriesId,
+    fixture.ScheduledAtUtc,
+    fixture.Status.ToString()
+);
+
+        await _fixtureBroadcaster.BroadcastFixtureCreatedAsync(
+            fixtureCreatedDto,
+            cancellationToken);
 
         return new CreateFixtureResponse(
             fixture.Id,
