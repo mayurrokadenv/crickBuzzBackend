@@ -184,9 +184,9 @@ public class UpdateFixtureScoreCommandHandler
             .ToList();
 
         var inningsScorecards = new InningsScorecardsDto(
-    scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
-    scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
-);
+            scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
+            scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
+        );
 
         // =========================================================
         // 16. MAP SCORECARDS -> SIGNALR DTOs
@@ -231,20 +231,37 @@ public class UpdateFixtureScoreCommandHandler
             .ToList();
 
         // =========================================================
-        // 17. BROADCAST LATEST SCORE + SCORECARDS
+        // 17. BROADCAST SCORE + COMPLETE FIXTURE DETAILS
         // =========================================================
 
         var scoreUpdate = new ScoreUpdateDto(
-            fixture.Id,
+            FixtureId: fixture.Id,
 
-            fixture.HomeScore.Runs,
-            fixture.HomeScore.Wickets ?? 0,
-            fixture.HomeScore.Overs,
+            // Fixture Details
+            SportId: fixture.SportId,
+            SportName: fixture.Sport?.Name ?? string.Empty,
+            Status: fixture.Status.ToString(),
+            Phase: fixture.Phase?.ToString(),
 
-            fixture.AwayScore.Runs,
-            fixture.AwayScore.Wickets ?? 0,
-            fixture.AwayScore.Overs,
-            scorecardUpdates);
+            HomeTeamId: fixture.HomeTeamId,
+            HomeTeamName: fixture.HomeTeam?.Name ?? string.Empty,
+
+            AwayTeamId: fixture.AwayTeamId,
+            AwayTeamName: fixture.AwayTeam?.Name ?? string.Empty,
+
+            // Home Score
+            HomeRuns: fixture.HomeScore.Runs,
+            HomeWickets: fixture.HomeScore.Wickets ?? 0,
+            HomeOvers: fixture.HomeScore.Overs,
+
+            // Away Score
+            AwayRuns: fixture.AwayScore.Runs,
+            AwayWickets: fixture.AwayScore.Wickets ?? 0,
+            AwayOvers: fixture.AwayScore.Overs,
+
+            // Scorecards
+            Scorecards: scorecardUpdates
+        );
 
         await _scoreBroadcaster.BroadcastAsync(
             scoreUpdate,
