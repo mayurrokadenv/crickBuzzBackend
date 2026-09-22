@@ -14,11 +14,18 @@ public class UpdateFixtureCommandValidator : AbstractValidator<UpdateFixtureComm
             .WithMessage("At least one of Status or Phase must be provided.");
 
         RuleFor(x => x.Status!.Value)
-            .IsInEnum().WithMessage("Status is not a recognized match status.")
+            .IsInEnum()
+            .WithMessage("Status is not a recognized match status.")
             .When(x => x.Status is not null);
 
         RuleFor(x => x.Phase!.Value)
-            .IsInEnum().WithMessage("Phase is not a recognized match phase.")
+            .IsInEnum()
+            .WithMessage("Phase is not a recognized match phase.")
             .When(x => x.Phase is not null);
+
+        RuleFor(x => x.BattingTeamId)
+            .NotNull()
+            .WithMessage("Please select a batting team.")
+            .When(x => x.Status is not null);
     }
 }
