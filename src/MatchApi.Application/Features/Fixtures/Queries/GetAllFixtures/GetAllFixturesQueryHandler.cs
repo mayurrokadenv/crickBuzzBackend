@@ -19,9 +19,10 @@ public class GetAllFixturesQueryHandler
       GetAllFixturesQuery request,
       CancellationToken cancellationToken)
     {
-        var fixtures =
-            await _fixtureRepository.GetAllAsync(
-                cancellationToken);
+        var fixtures = (await _fixtureRepository.GetAllAsync(
+       cancellationToken))
+       .OrderByDescending(f => f.CreatedAtUtc)
+       .ToList();
 
         return fixtures
             .Select(f =>
