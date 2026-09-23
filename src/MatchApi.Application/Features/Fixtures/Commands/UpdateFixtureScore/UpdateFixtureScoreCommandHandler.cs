@@ -210,7 +210,8 @@ public class UpdateFixtureScoreCommandHandler
                         b.Balls,
                         b.Fours,
                         b.Sixes,
-                        b.StrikeRate))
+                        b.StrikeRate,
+                        b.Out))
                     .ToList(),
 
                 // Bowling Figures
