@@ -36,5 +36,14 @@ namespace MatchApi.Infrastructure.Repositories
             return sport != null;
 
         }
+        public async Task<Sport?> GetByIdAsync(
+       Guid sportId,
+       CancellationToken cancellationToken)
+        {
+            return await _context.Sports
+                .FirstOrDefaultAsync(
+                    s => s.Id == sportId,
+                    cancellationToken);
+        }
     }
 }

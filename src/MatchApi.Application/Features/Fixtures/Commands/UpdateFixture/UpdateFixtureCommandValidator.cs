@@ -23,9 +23,6 @@ public class UpdateFixtureCommandValidator : AbstractValidator<UpdateFixtureComm
             .WithMessage("Phase is not a recognized match phase.")
             .When(x => x.Phase is not null);
 
-        RuleFor(x => x.BattingTeamId)
-            .NotNull()
-            .WithMessage("Please select a batting team.")
-            .When(x => x.Status is not null);
+       
     }
 }
