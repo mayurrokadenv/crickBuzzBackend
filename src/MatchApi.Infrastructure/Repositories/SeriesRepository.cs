@@ -46,4 +46,10 @@ public class SeriesRepository : ISeriesRepository
                 s => s.Id == seriesId,
                 cancellationToken);
     }
+
+
+    public void Delete(Series series)
+    {
+        _context.Series.Remove(series);
+    }
 }

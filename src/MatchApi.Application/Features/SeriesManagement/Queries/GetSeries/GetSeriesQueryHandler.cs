@@ -19,8 +19,10 @@ public class GetSeriesQueryHandler
         GetSeriesQuery request,
         CancellationToken cancellationToken)
     {
-        var series = await _seriesRepository.GetAllAsync(
-            cancellationToken);
+        var series = (await _seriesRepository.GetAllAsync(
+           cancellationToken))
+           .OrderByDescending(s => s.CreatedAtUtc)
+           .ToList();
 
         return series
             .Select(s => new SeriesDto
