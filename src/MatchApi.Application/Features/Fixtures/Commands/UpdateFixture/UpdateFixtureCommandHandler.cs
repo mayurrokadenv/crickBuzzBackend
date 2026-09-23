@@ -37,7 +37,16 @@ public class UpdateFixtureCommandHandler
         // 2. Update Status
         if (request.Status is not null)
         {
-            fixture.UpdateStatus(request.Status.Value, request.BattingTeamId,request.WinningTeamId);
+            if (fixture.Sport?.Name.Equals(
+                    "Cricket",
+                    StringComparison.OrdinalIgnoreCase) == true
+                && request.BattingTeamId is null)
+            {
+                throw new InvalidOperationException(
+                    "Please select a batting team.");
+            }
+
+            fixture.UpdateStatus(request.Status.Value,request.BattingTeamId,request.WinningTeamId);
         }
 
         // 3. Update Phase
@@ -50,52 +59,45 @@ public class UpdateFixtureCommandHandler
         await _unitOfWork.SaveChangesAsync(
             cancellationToken);
 
-
-
         var fixtureUpdatedDto = new FixtureUpdatedSignalRDto(
-    fixture.Id,
+            fixture.Id,
 
-    fixture.HomeTeamId,
-    fixture.HomeTeam?.Name ?? string.Empty,
+            fixture.HomeTeamId,
+            fixture.HomeTeam?.Name ?? string.Empty,
 
-    fixture.AwayTeamId,
-    fixture.AwayTeam?.Name ?? string.Empty,
+            fixture.AwayTeamId,
+            fixture.AwayTeam?.Name ?? string.Empty,
 
-    fixture.SportId,
-    fixture.SeriesId,
-    fixture.ScheduledAtUtc,
+            fixture.SportId,
+            fixture.SeriesId,
+            fixture.ScheduledAtUtc,
 
-    fixture.Status.ToString(),
-    fixture.Phase?.ToString(),
+            fixture.Status.ToString(),
+            fixture.Phase?.ToString(),
 
-    fixture.BattingTeamId,
-    fixture.WinningTeamId,
+            fixture.BattingTeamId,
+            fixture.WinningTeamId,
 
-    fixture.HomeScore.Runs,
-    fixture.HomeScore.Wickets ?? 0,
-    fixture.HomeScore.Overs,
+            fixture.HomeScore.Runs,
+            fixture.HomeScore.Wickets ?? 0,
+            fixture.HomeScore.Overs,
 
-    fixture.AwayScore.Runs,
-    fixture.AwayScore.Wickets ?? 0,
-    fixture.AwayScore.Overs
-);
+            fixture.AwayScore.Runs,
+            fixture.AwayScore.Wickets ?? 0,
+            fixture.AwayScore.Overs
+        );
 
         await _fixtureBroadcaster.BroadcastFixtureUpdatedAsync(
             fixtureUpdatedDto,
             cancellationToken);
-        // =========================================================
-        // 5. GET ALL SCORECARDS FOR THIS FIXTURE
-        // =========================================================
 
+        // 5. GET ALL SCORECARDS FOR THIS FIXTURE
         var scorecards =
             await _scorecardRepository.GetByFixtureAsync(
                 fixture.Id,
                 cancellationToken);
 
-        // =========================================================
         // 6. MAP SCORECARDS -> DTOs
-        // =========================================================
-
         var scorecardDtos = scorecards
             .Select(s => new FixtureScorecardDto(
                 s.Id,
@@ -104,7 +106,6 @@ public class UpdateFixtureCommandHandler
                 s.BattingTeamId,
                 s.BowlingTeamId,
 
-                // Batting Figures
                 s.BattingFigures
                     .Select(b => new BattingFigureDto(
                         b.Id,
@@ -118,7 +119,6 @@ public class UpdateFixtureCommandHandler
                         b.Out))
                     .ToList(),
 
-                // Bowling Figures
                 s.BowlingFigures
                     .Select(b => new BowlingFigureDto(
                         b.Id,
@@ -135,16 +135,12 @@ public class UpdateFixtureCommandHandler
             ))
             .ToList();
 
-
         var inningsScorecards = new InningsScorecardsDto(
-scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
-scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
-);
+            scorecardDtos.FirstOrDefault(s => s.InningsNo == 1),
+            scorecardDtos.FirstOrDefault(s => s.InningsNo == 2)
+        );
 
-        // =========================================================
         // 7. RETURN COMPLETE FIXTURE RESPONSE
-        // =========================================================
-
         return new FixtureDto(
             fixture.Id,
 
