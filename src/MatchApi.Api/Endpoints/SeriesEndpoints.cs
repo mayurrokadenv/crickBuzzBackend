@@ -1,4 +1,5 @@
 ﻿using MatchApi.Application.Features.SeriesManagement.Commands.CreateSeries;
+using MatchApi.Application.Features.SeriesManagement.Commands.DeleteSeries;
 using MatchApi.Application.Features.SeriesManagement.Queries.GetPointsTable;
 using MatchApi.Application.Features.SeriesManagement.Queries.GetSeries;
 using MediatR;
@@ -29,6 +30,13 @@ public static class SeriesEndpoints
             .WithSummary("Gets points table for a series")
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        group.MapDelete("/{seriesId:guid}", DeleteSeries)
+            .WithName("DeleteSeries")
+            .WithSummary("Deletes a series")
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound);
+
 
         return app;
     }
@@ -78,6 +86,27 @@ public static class SeriesEndpoints
             cancellationToken);
 
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> DeleteSeries(
+    Guid seriesId,
+    ISender sender,
+    CancellationToken cancellationToken)
+    {
+        try
+        {
+            await sender.Send(
+                new DeleteSeriesCommand(seriesId),
+                cancellationToken);
+
+            return Results.NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Problem(
+                ex.Message,
+                statusCode: StatusCodes.Status404NotFound);
+        }
     }
 }
 

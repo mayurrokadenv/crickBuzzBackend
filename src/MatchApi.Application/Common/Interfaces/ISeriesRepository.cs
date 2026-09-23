@@ -9,4 +9,6 @@ public interface ISeriesRepository
     Task<Series?> GetSeriesByIdAsync(
     Guid seriesId,
     CancellationToken cancellationToken);
+
+    void Delete(Series series);
 }

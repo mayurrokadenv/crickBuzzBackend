@@ -19,9 +19,10 @@ public class GetLiveFixturesQueryHandler
         GetLiveFixturesQuery request,
         CancellationToken cancellationToken)
     {
-        var fixtures =
-            await _fixtureRepository.GetLiveAsync(
-                cancellationToken);
+        var fixtures = (await _fixtureRepository.GetLiveAsync(
+        cancellationToken))
+        .OrderByDescending(f => f.CreatedAtUtc)
+        .ToList();
 
         return fixtures
             .Select(f =>

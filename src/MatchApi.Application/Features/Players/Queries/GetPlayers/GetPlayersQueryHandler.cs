@@ -17,9 +17,11 @@ namespace MatchApi.Application.Features.Players.Queries.GetPlayers
             GetPlayersQuery request,
             CancellationToken cancellationToken)
         {
-            var players = await _repository.GetPlayersByTeamIdAsync(
-                request.TeamId,
-                cancellationToken);
+            var players = (await _repository.GetPlayersByTeamIdAsync(
+      request.TeamId,
+      cancellationToken))
+      .OrderByDescending(player => player.CreatedAtUtc)
+      .ToList();
 
             return players.Select(player => new GetPlayersResponse
             {

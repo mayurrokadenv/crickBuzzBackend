@@ -18,7 +18,8 @@ namespace MatchApi.Application.Features.Teams.Queries.GetTeams
             GetTeamsQuery request,
             CancellationToken cancellationToken)
         {
-            var teams = await _repository.GetTeamsAsync(cancellationToken);
+            var teams = (await _repository.GetTeamsAsync(cancellationToken))
+                        .OrderByDescending(team => team.CreatedAtUtc).ToList();
 
             return teams.Select(team => new GetTeamsResponse
             {
@@ -30,8 +31,10 @@ namespace MatchApi.Application.Features.Teams.Queries.GetTeams
                 Description = team.Sport.Description
                 },
                 Color = team.ColorHex,
-                players = team.Players.Select(player => new GetPlayerResponse() 
-                {
+                players = team.Players
+    .OrderByDescending(player => player.CreatedAtUtc)
+    .Select(player => new GetPlayerResponse()
+    {
                     Role = player.SportRole.RoleName,
                     PlayerName = player.Name,
                     PlayerId = player.Id,
