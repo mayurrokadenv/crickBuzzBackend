@@ -16,7 +16,8 @@ public record BattingFigureUpdateDto(
     int Balls,
     int Fours,
     int Sixes,
-    decimal StrikeRate);
+    decimal StrikeRate,
+    bool Out);
 
 public record BowlingFigureUpdateDto(
     Guid Id,
